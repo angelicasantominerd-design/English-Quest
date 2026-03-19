@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>English Quest: Secret Agents HQ</title>
+    <style>
+        :root { --green: #00ff41; --dark: #0a0a0a; --blue: #00d4ff; }
+        body { background-color: var(--dark); color: var(--green); font-family: 'Courier New', monospace; display: flex; justify-content: center; padding: 20px; }
+        .container { max-width: 850px; width: 100%; border: 2px solid var(--green); padding: 30px; box-shadow: 0 0 20px var(--green); background: rgba(0,0,0,0.9); position: relative; }
+        .mission { display: none; }
+        .active { display: block; }
+        h1, h2 { text-align: center; text-transform: uppercase; letter-spacing: 3px; border-bottom: 1px solid var(--green); padding-bottom: 10px; }
+        .video-container { width: 100%; border: 1px solid var(--green); margin-bottom: 20px; background: #000; }
+        .box { background: #111; border: 1px dashed var(--green); padding: 15px; margin: 15px 0; }
+        button { background: var(--green); color: black; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; text-transform: uppercase; }
+        button:hover { background: #008f11; box-shadow: 0 0 10px var(--green); }
+        .btn-meta { background: var(--blue); color: black; }
+        input { background: #222; border: 1px solid var(--green); color: var(--green); padding: 12px; width: 96%; text-align: center; font-size: 18px; margin-top: 10px; }
+        .error { color: #ff3333; display: none; text-align: center; font-weight: bold; margin-top: 10px; }
+        .badge { width: 80px; margin: 10px; border-radius: 50%; border: 2px solid gold; }
+        
+        /* Control de música */
+        #music-control { position: absolute; top: 10px; right: 10px; cursor: pointer; font-size: 20px; background: none; border: 1px solid var(--green); color: var(--green); width: auto; padding: 5px 10px; }
+    </style>
+</head>
+<body>
+
+<audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3"></audio>
+<audio id="snd-success" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+<audio id="snd-error" src="https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg"></audio>
+
+<div class="container">
+    <button id="music-control" onclick="toggleMusic()">🔊 MUSIC ON</button>
+
+    <div id="start" class="mission active">
+        <h1>[INCOMING MESSAGE]</h1>
+        <div class="video-container">
+            <video id="mainVideo" controls autoplay style="width:100%;">
+                <source src="intro.mp4" type="video/mp4">
+                Tu navegador no soporta videos.
+            </video>
+        </div>
+        <p align="center">Agente, el mundo necesita tu ayuda para proteger los árboles. <br><strong>¿Aceptas la misión?</strong></p>
+        <button onclick="startMission()">ACEPTAR MISIÓN</button>
+    </div>
+
+    <div id="mision1" class="mission">
+        <h2>Mission 1: The ID Reveal</h2>
+        <div class="box">
+            <p>Complete using <strong>AM, IS, ARE</strong>:</p>
+            <p>1. I ___ an agent. <br> 2. She ___ the boss. <br> 3. They ___ trees.</p>
+        </div>
+        <input type="text" id="pass1" placeholder="Ej: am is are">
+        <p id="error1" class="error">❌ CODE REJECTED</p>
+        <button onclick="checkPass('pass1', 'am is are', 'mision2', 'error1')">DECODE</button>
+    </div>
+
+    <div id="mision2" class="mission">
+        <h2>Mission 2: The Informant</h2>
+        <div class="box">
+            <p>"¿____ is the secret base?" (What, Where, When)</p>
+        </div>
+        <input type="text" id="pass2" placeholder="Write the Wh-word">
+        <p id="error2" class="error">❌ WRONG QUESTION</p>
+        <button onclick="checkPass('pass2', 'where', 'mision3', 'error2')">SEND QUESTION</button>
+    </div>
+
+    <div id="mision3" class="mission">
+        <h2>Mission 3: Whose is this?</h2>
+        <div class="box">
+            <p>"This is my pen. It is ____." (mine / your / his)</p>
+        </div>
+        <input type="text" id="pass3" placeholder="Write the possessive">
+        <p id="error3" class="error">❌ THAT'S NOT MINE!</p>
+        <button onclick="checkPass('pass3', 'mine', 'mision4', 'error3')">CLAIM OBJECT</button>
+    </div>
+
+    <div id="mision4" class="mission">
+        <h2>Mission 4: The Meta-HQ 🌐</h2>
+        <div class="box">
+            <p>Entra al Metaverso y analiza las habilidades del árbol.</p>
+            <button class="btn-meta" onclick="window.open('https://www.spatial.io/s/rubbery_viper765s-Bespoke-Space-69bad014e0860b75f8837b1d', '_blank')">🚀 IR AL METAVERSO 3D</button>
+        </div>
+        <p align="center">"A tree ___ produce oxygen, but it ___ walk."</p>
+        <input type="text" id="pass4" placeholder="Escribe: can can't">
+        <p id="error4" class="error">❌ REVISA EL APÓSTROFE (can can't)</p>
+        <button onclick="checkPass('pass4', 'can can\'t', 'mision5', 'error4')">SCAN ABILITIES</button>
+    </div>
+
+    <div id="mision5" class="mission">
+        <h2>Mission 5: Animal Spy</h2>
+        <div class="box">
+            <p>"A forest is ____ (big) than a garden."</p>
+        </div>
+        <input type="text" id="pass5" placeholder="Write the comparative">
+        <p id="error5" class="error">❌ SIZE ERROR</p>
+        <button onclick="checkPass('pass5', 'bigger', 'final', 'error5')">FINISH MISSION</button>
+    </div>
+
+    <div id="final" class="mission">
+        <h2>🏆 AGENT ELITE 🏆</h2>
+        <div class="box" style="text-align:center;">
+            <button onclick="window.open('https://create.kahoot.it/share/kahoot-english-quest-final-mission-challenge/2abc0829-64cb-4c85-a266-decc6a6ed4a4', '_blank')">🔥 OPEN FINAL KAHOOT 🔥</button>
+            <hr>
+            <img src="https://cdn-icons-png.flaticon.com/512/1041/1041916.png" class="badge">
+            <img src="https://cdn-icons-png.flaticon.com/512/1253/1253360.png" class="badge">
+        </div>
+        <button onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+
+</div>
+
+<script>
+    const bgMusic = document.getElementById('bg-music');
+    let musicPlaying = false;
+
+    function toggleMusic() {
+        if (musicPlaying) {
+            bgMusic.pause();
+            document.getElementById('music-control').innerText = "🔇 MUSIC OFF";
+        } else {
+            bgMusic.play();
+            document.getElementById('music-control').innerText = "🔊 MUSIC ON";
+        }
+        musicPlaying = !musicPlaying;
+    }
+
+    function startMission() {
+        // Iniciar música al aceptar misión (los navegadores bloquean audio sin interacción previa)
+        bgMusic.volume = 0.3; // Volumen bajo para que no sature
+        bgMusic.play();
+        musicPlaying = true;
+        goTo('mision1');
+    }
+
+    function playSound(id) {
+        document.getElementById(id).currentTime = 0;
+        document.getElementById(id).play();
+    }
+
+    function goTo(id) {
+        document.querySelectorAll('.mission').forEach(m => m.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    function checkPass(inputId, correct, nextId, errorId) {
+        const val = document.getElementById(inputId).value.toLowerCase().trim().replace("’", "'");
+        if (val === correct) {
+            playSound('snd-success');
+            goTo(nextId);
+        } else {
+            playSound('snd-error');
+            document.getElementById(errorId).style.display = 'block';
+        }
+    }
+</script>
+
+</body>
+</html>
